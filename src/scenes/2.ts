@@ -25,7 +25,7 @@ import { toggleFullScreen } from '../helpers/fullscreen'
 import { resizeRendererToDisplaySize } from '../helpers/responsiveness'
 import '../style.css'
 
-const CANVAS_ID = 'one'
+const CANVAS_ID = 'canvas-2'
 
 let canvas: HTMLElement
 let renderer: WebGLRenderer
@@ -181,13 +181,6 @@ function init() {
     const gridHelper = new GridHelper(20, 20, 'teal', 'darkgray')
     gridHelper.position.y = -0.01
     scene.add(gridHelper)
-  }
-
-  // ===== 📈 STATS & CLOCK =====
-  {
-    clock = new Clock()
-    stats = new Stats()
-    document.body.appendChild(stats.dom)
   }
 
   // ==== 🐞 DEBUG GUI ====
