@@ -7,7 +7,36 @@
     <title>Three.js + TypeScript + Vite</title>
   </head>
   <body>
-    <canvas id="scene"></canvas>
-    <script type="module" src="/src/scene.ts"></script>
+    <div id="canvas-select" class="flex">
+      <button id="1">TEST</button>
+      <button>TEST</button>
+      <button>TEST</button>
+      <button>TEST</button>
+      <button>TEST</button>
+    </div>
+    <canvas id="one"></canvas>
+    <script type="module" src="/src/sketches/1.ts"></script>
   </body>
+  <style>
+    .flex {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .flex button {
+      padding: 0.25rem 1rem;
+      border: 1px solid #000;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    #canvas-select {
+      position: absolute;
+      top: 0;
+      left: 100px;
+      z-index: 100;
+    }
+  </style>
 </html>
