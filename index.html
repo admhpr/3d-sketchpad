@@ -7,15 +7,21 @@
     <title>Three.js + TypeScript + Vite</title>
   </head>
   <body>
-    <div id="canvas-select" class="flex">
-      <button id="1">TEST</button>
-      <button>TEST</button>
-      <button>TEST</button>
-      <button>TEST</button>
-      <button>TEST</button>
-    </div>
+    <div id="canvas-select" class="flex"></div>
     <canvas id="one"></canvas>
-    <script type="module" src="/src/sketches/1.ts"></script>
+    <script>
+      const SKETCHES = 5;
+      const canvasSelect = document.getElementById("canvas-select");
+      Array(SKETCHES).fill(0).forEach((_, i) => {
+        const button = document.createElement("button");
+        button.innerText = `Sketch ${i + 1}`;
+        button.addEventListener("click", async () => {
+
+          await import (`/src/sketches/${i + 1}.ts`);
+        });
+        canvasSelect.appendChild(button);
+      });
+    </script>
   </body>
   <style>
     .flex {
@@ -34,7 +40,7 @@
 
     #canvas-select {
       position: absolute;
-      top: 0;
+      top: 10px;
       left: 100px;
       z-index: 100;
     }
