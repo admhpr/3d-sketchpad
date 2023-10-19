@@ -2,30 +2,26 @@ import GUI from "lil-gui";
 import {
   AmbientLight,
   AxesHelper,
-  BoxGeometry,
   Clock,
-  GridHelper,
   LoadingManager,
   Mesh,
-  MeshLambertMaterial,
-  MeshStandardMaterial,
   PCFSoftShadowMap,
   PerspectiveCamera,
-  PlaneGeometry,
   PointLight,
   PointLightHelper,
-  Scene,
   WebGLRenderer,
 } from "three";
 import { DragControls } from "three/examples/jsm/controls/DragControls";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Stats from "three/examples/jsm/libs/stats.module";
-import * as animations from "../helpers/animations";
-import { toggleFullScreen } from "../helpers/fullscreen";
-import { resizeRendererToDisplaySize } from "../helpers/responsiveness";
-import { scene1 } from "./scences/1";
-import "../style.css";
 
+import { toggleFullScreen } from "./helpers/fullscreen";
+import { resizeRendererToDisplaySize } from "./helpers/responsiveness";
+import { createScene } from "./scenes/1";
+import "./style.css";
+
+// const scenes = [scene1]
+const animation = { enabled: false, play: true };
 const CANVAS_ID = "scene";
 
 let canvas: HTMLElement;
@@ -43,21 +39,21 @@ let clock: Clock;
 let stats: Stats;
 let gui: GUI;
 
-let scene = scene1
+
+
+let scene = createScene()
 init();
 animate();
 
-function init() {
-  const animation = { enabled: false, play: true };
-
-  // ===== 🖼️ CANVAS, RENDERER =====
-  canvas = document.querySelector(`canvas#${CANVAS_ID}`)!;
+function createRenderer(canvas: HTMLElement) {
   renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = PCFSoftShadowMap;
+  return renderer
+}
 
-  // ===== 👨🏻‍💼 LOADING MANAGER =====
+function createLoadingManager() {
   loadingManager = new LoadingManager();
   loadingManager.onStart = () => {
     console.log("loading started");
@@ -72,8 +68,10 @@ function init() {
   loadingManager.onError = () => {
     console.log("❌ error while loading");
   };
+  return loadingManager
+}
 
-  // ===== 🎥 CAMERA =====
+function createCamera(canvas: HTMLElement){
   camera = new PerspectiveCamera(
     50,
     canvas.clientWidth / canvas.clientHeight,
@@ -81,16 +79,20 @@ function init() {
     100
   );
   camera.position.set(2, 2, 5);
+  return camera
+}
 
-  // ===== 🕹️ CONTROLS =====
-
+function createOrbitControls(camera: PerspectiveCamera, canvas: HTMLElement){
   cameraControls = new OrbitControls(camera, canvas);
   cameraControls.target = cube.position.clone();
   cameraControls.enableDamping = true;
   cameraControls.autoRotate = false;
   cameraControls.update();
+  return cameraControls
+}
 
-  dragControls = new DragControls([cube], camera, renderer.domElement);
+function createDragControls(camera: PerspectiveCamera, renderer: WebGLRenderer){
+  const dragControls = new DragControls([cube], camera, renderer.domElement);
   dragControls.addEventListener("hoveron", (event) => {
     event.object.material.emissive.set("orange");
   });
@@ -112,21 +114,26 @@ function init() {
     event.object.material.needsUpdate = true;
   });
   dragControls.enabled = false;
+  return dragControls
+}
 
-  // Full screen
+function enableFullscreen(){
   window.addEventListener("dblclick", (event) => {
     if (event.target === canvas) {
       toggleFullScreen(canvas);
     }
   });
+}
 
-  // ===== 📈 STATS & CLOCK =====
-
+function enableStats(){
   clock = new Clock();
   stats = new Stats();
   document.body.appendChild(stats.dom);
+  return {clock, stats }
+}
 
-  gui = new GUI({ title: "🐞 Debug GUI", width: 300 });
+function createDevGui(){
+  new GUI({ title: "🐞 Debug GUI", width: 300 });
 
   const cubeOneFolder = gui.addFolder("Cube one");
 
@@ -185,16 +192,26 @@ function init() {
   gui.close();
 }
 
+
+function init() {
+  canvas = document.querySelector(`canvas#${CANVAS_ID}`)!;
+  renderer = createRenderer(canvas)
+  loadingManager = createLoadingManager()
+  camera = createCamera(canvas)
+  cameraControls = createOrbitControls(camera, canvas)
+  dragControls = createDragControls(camera, renderer)
+
+  enableFullscreen()
+  enableStats()
+
+  createDevGui()
+}
+
 function animate() {
   requestAnimationFrame(animate);
   render();
 
   stats.update();
-
-  if (animation.enabled && animation.play) {
-    animations.rotate(cube, clock, Math.PI / 3);
-    animations.bounce(cube, clock, 1, 0.5, 0.5);
-  }
 
   if (resizeRendererToDisplaySize(renderer)) {
     const canvas = renderer.domElement;
@@ -206,5 +223,6 @@ function animate() {
 }
 
 function render() {
+  console.log("rendering", scene)
   renderer.render(scene, camera);
 }
