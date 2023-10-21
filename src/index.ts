@@ -37,11 +37,11 @@ let axesHelper: AxesHelper;
 let pointLightHelper: PointLightHelper;
 let clock: Clock;
 let stats: Stats;
-let gui: GUI;
 
 
 
-let scene = createScene()
+let { scene, subjects } = createScene()
+cube = subjects[0]
 init();
 animate();
 
@@ -84,7 +84,7 @@ function createCamera(canvas: HTMLElement){
 
 function createOrbitControls(camera: PerspectiveCamera, canvas: HTMLElement){
   cameraControls = new OrbitControls(camera, canvas);
-  cameraControls.target = cube.position.clone();
+  cameraControls.target = scene.children[0].position;
   cameraControls.enableDamping = true;
   cameraControls.autoRotate = false;
   cameraControls.update();
@@ -133,7 +133,7 @@ function enableStats(){
 }
 
 function createDevGui(){
-  new GUI({ title: "🐞 Debug GUI", width: 300 });
+  const gui = new GUI({ title: "🐞 Debug GUI", width: 300 });
 
   const cubeOneFolder = gui.addFolder("Cube one");
 
@@ -161,13 +161,13 @@ function createDevGui(){
   const controlsFolder = gui.addFolder("Controls");
   controlsFolder.add(dragControls, "enabled").name("drag controls");
 
-  const lightsFolder = gui.addFolder("Lights");
-  lightsFolder.add(pointLight, "visible").name("point light");
-  lightsFolder.add(ambientLight, "visible").name("ambient light");
+  // const lightsFolder = gui.addFolder("Lights");
+  // lightsFolder.add(pointLight, "visible").name("point light");
+  // lightsFolder.add(ambientLight, "visible").name("ambient light");
 
-  const helpersFolder = gui.addFolder("Helpers");
-  helpersFolder.add(axesHelper, "visible").name("axes");
-  helpersFolder.add(pointLightHelper, "visible").name("pointLight");
+  // const helpersFolder = gui.addFolder("Helpers");
+  // helpersFolder.add(axesHelper, "visible").name("axes");
+  // helpersFolder.add(pointLightHelper, "visible").name("pointLight");
 
   const cameraFolder = gui.addFolder("Camera");
   cameraFolder.add(cameraControls, "autoRotate");
@@ -223,6 +223,5 @@ function animate() {
 }
 
 function render() {
-  console.log("rendering", scene)
   renderer.render(scene, camera);
 }

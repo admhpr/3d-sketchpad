@@ -69,4 +69,5 @@ export function createScene() {
   const gridHelper = new GridHelper(20, 20, "teal", "darkgray");
   gridHelper.position.y = -0.01;
   scene.add(gridHelper);
+  return { scene, subjects: [cube]};
 }
