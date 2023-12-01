@@ -27,20 +27,17 @@ const CANVAS_ID = "scene";
 let canvas: HTMLElement;
 let renderer: WebGLRenderer;
 let loadingManager: LoadingManager;
-let ambientLight: AmbientLight;
-let pointLight: PointLight;
 let cube: Mesh;
 let camera: PerspectiveCamera;
 let cameraControls: OrbitControls;
 let dragControls: DragControls;
-let axesHelper: AxesHelper;
-let pointLightHelper: PointLightHelper;
+
 let clock: Clock;
 let stats: Stats;
 
 
 
-let { scene, subjects } = createScene()
+let { scene, subjects, lights } = createScene()
 cube = subjects[0]
 init();
 animate();
@@ -133,6 +130,19 @@ function enableStats(){
 }
 
 function createDevGui(){
+
+  // Helpers
+
+
+  const axesHelper = new AxesHelper(4);
+  axesHelper.visible = false;
+  scene.add(axesHelper);
+
+  const pointLightHelper = new PointLightHelper(lights.pointLight, undefined, "orange");
+  pointLightHelper.visible = false;
+  scene.add(pointLightHelper);
+
+
   const gui = new GUI({ title: "🐞 Debug GUI", width: 300 });
 
   const cubeOneFolder = gui.addFolder("Cube one");
@@ -160,17 +170,16 @@ function createDevGui(){
 
   const controlsFolder = gui.addFolder("Controls");
   controlsFolder.add(dragControls, "enabled").name("drag controls");
-
-  // const lightsFolder = gui.addFolder("Lights");
-  // lightsFolder.add(pointLight, "visible").name("point light");
-  // lightsFolder.add(ambientLight, "visible").name("ambient light");
-
-  // const helpersFolder = gui.addFolder("Helpers");
-  // helpersFolder.add(axesHelper, "visible").name("axes");
-  // helpersFolder.add(pointLightHelper, "visible").name("pointLight");
-
   const cameraFolder = gui.addFolder("Camera");
   cameraFolder.add(cameraControls, "autoRotate");
+
+  const lightsFolder = gui.addFolder('Lights')
+  lightsFolder.add(lights.pointLight, 'visible').name('point light')
+  lightsFolder.add(lights.ambientLight, 'visible').name('ambient light')
+
+  const helpersFolder = gui.addFolder('Helpers')
+  helpersFolder.add(axesHelper, 'visible').name('axes')
+  helpersFolder.add(pointLightHelper, 'visible').name('pointLight')
 
   // persist GUI state in local storage on changes
   gui.onFinishChange(() => {
