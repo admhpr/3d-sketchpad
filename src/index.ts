@@ -175,6 +175,8 @@ function createDevGui(){
 
   const lightsFolder = gui.addFolder('Lights')
   lightsFolder.add(lights.pointLight, 'visible').name('point light')
+  lightsFolder.addColor(lights.pointLight, "color");
+  lightsFolder.add(lights.pointLight, "intensity").min(0).max(1000).step(10).name("point light intensity");
   lightsFolder.add(lights.ambientLight, 'visible').name('ambient light')
 
   const helpersFolder = gui.addFolder('Helpers')

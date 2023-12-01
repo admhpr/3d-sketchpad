@@ -1,6 +1,5 @@
 import {
   AmbientLight,
-  AxesHelper,
   BoxGeometry,
   GridHelper,
   Mesh,
@@ -8,7 +7,6 @@ import {
   MeshStandardMaterial,
   PlaneGeometry,
   PointLight,
-  PointLightHelper,
   Scene,
 } from "three";
 
