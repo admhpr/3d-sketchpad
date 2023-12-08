@@ -1,13 +1,11 @@
 import GUI from "lil-gui";
 import {
-  AmbientLight,
   AxesHelper,
   Clock,
   LoadingManager,
   Mesh,
   PCFSoftShadowMap,
   PerspectiveCamera,
-  PointLight,
   PointLightHelper,
   WebGLRenderer,
 } from "three";
@@ -17,7 +15,8 @@ import Stats from "three/examples/jsm/libs/stats.module";
 
 import { toggleFullScreen } from "./helpers/fullscreen";
 import { resizeRendererToDisplaySize } from "./helpers/responsiveness";
-import { createScene } from "./scenes/1";
+import { createScene as createScene1 } from "./scenes/1";
+import { createScene as createScene2 } from "./scenes/2";
 import "./style.css";
 
 // const scenes = [scene1]
@@ -36,9 +35,12 @@ let clock: Clock;
 let stats: Stats;
 
 
+const selectedSceneIndex = 0;
+const scenes = [createScene1, createScene2];
 
-let { scene, subjects, lights } = createScene()
+let { scene, subjects, lights } = scenes[selectedSceneIndex + 1]();
 cube = subjects[0]
+
 init();
 animate();
 
@@ -130,10 +132,6 @@ function enableStats(){
 }
 
 function createDevGui(){
-
-  // Helpers
-
-
   const axesHelper = new AxesHelper(4);
   axesHelper.visible = false;
   scene.add(axesHelper);
@@ -183,17 +181,16 @@ function createDevGui(){
   helpersFolder.add(axesHelper, 'visible').name('axes')
   helpersFolder.add(pointLightHelper, 'visible').name('pointLight')
 
-  // persist GUI state in local storage on changes
+
   gui.onFinishChange(() => {
     const guiState = gui.save();
     localStorage.setItem("guiState", JSON.stringify(guiState));
   });
 
-  // load GUI state if available in local storage
   const guiState = localStorage.getItem("guiState");
   if (guiState) gui.load(JSON.parse(guiState));
 
-  // reset GUI state button
+
   const resetGui = () => {
     localStorage.removeItem("guiState");
     gui.reset();
@@ -221,7 +218,6 @@ function init() {
 function animate() {
   requestAnimationFrame(animate);
   render();
-
   stats.update();
 
   if (resizeRendererToDisplaySize(renderer)) {
@@ -229,10 +225,23 @@ function animate() {
     camera.aspect = canvas.clientWidth / canvas.clientHeight;
     camera.updateProjectionMatrix();
   }
-
   cameraControls.update();
 }
 
 function render() {
   renderer.render(scene, camera);
 }
+
+function onSceneSelect(event: MouseEvent){
+  const sceneIndex = parseInt((event.target as HTMLButtonElement).dataset.sceneIndex!)
+  const { scene: newScene, subjects: newSubjects, lights: newLights } = scenes[sceneIndex]()
+  scene = newScene
+  subjects = newSubjects
+  lights = newLights
+}
+
+function setupButtonListeners(){
+  document.querySelectorAll("button").forEach(button => button.onclick = onSceneSelect);
+}
+
+setupButtonListeners()

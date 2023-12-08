@@ -10,6 +10,7 @@ import {
   PointLight,
   PointLightHelper,
   Scene,
+SphereGeometry,
 } from 'three'
 
 
@@ -40,15 +41,15 @@ export function createScene() {
     
     
     const sideLength = 1
-    const cubeGeometry = new BoxGeometry(sideLength, sideLength, sideLength)
+    const cubeGeometry = new SphereGeometry(sideLength)
     const cubeMaterial = new MeshStandardMaterial({
-      color: '#f69f1f',
+      color: 'blue',
       metalness: 0.5,
       roughness: 0.7,
     })
     const cube = new Mesh(cubeGeometry, cubeMaterial)
     cube.castShadow = true
-    cube.position.y = 0.5
+    cube.position.y = 0
 
     const planeGeometry = new PlaneGeometry(3, 3)
     const planeMaterial = new MeshLambertMaterial({
@@ -78,8 +79,10 @@ export function createScene() {
     scene.add(pointLightHelper)
 
     const gridHelper = new GridHelper(20, 20, 'teal', 'darkgray')
-    gridHelper.position.y = -0.01
+
     scene.add(gridHelper)
+
+    return { scene, lights: {ambientLight, pointLight}, subjects: [cube]};
   
 }
 
