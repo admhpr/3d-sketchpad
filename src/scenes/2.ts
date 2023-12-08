@@ -49,7 +49,7 @@ export function createScene() {
     })
     const cube = new Mesh(cubeGeometry, cubeMaterial)
     cube.castShadow = true
-    cube.position.y = 0
+    cube.position.y = 0.5
 
     const planeGeometry = new PlaneGeometry(3, 3)
     const planeMaterial = new MeshLambertMaterial({
@@ -79,7 +79,7 @@ export function createScene() {
     scene.add(pointLightHelper)
 
     const gridHelper = new GridHelper(20, 20, 'teal', 'darkgray')
-
+    gridHelper.position.y = -0.01
     scene.add(gridHelper)
 
     return { scene, lights: {ambientLight, pointLight}, subjects: [cube]};
