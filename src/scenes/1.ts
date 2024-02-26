@@ -10,7 +10,6 @@ import {
 
 import "../style.css";
 
-
 export function createScene() {
   const scene = new Scene();
 

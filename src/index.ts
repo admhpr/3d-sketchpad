@@ -1,18 +1,14 @@
-import GUI from "lil-gui";
 import {
-AmbientLight,
-  AxesHelper,
+  AmbientLight,
   Clock,
   LoadingManager,
-  Mesh,
   PCFSoftShadowMap,
   PerspectiveCamera,
   PointLight,
-  PointLightHelper,
   Scene,
   WebGLRenderer,
 } from "three";
-import { DragControls } from "three/examples/jsm/controls/DragControls";
+
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Stats from "three/examples/jsm/libs/stats.module";
 
@@ -32,7 +28,6 @@ let cameraControls: OrbitControls;
 let clock: Clock;
 let stats: Stats;
 
-
 const scenes = [createScene1, createScene2];
 let scene: Scene;
 
@@ -41,7 +36,7 @@ function createRenderer(canvas: HTMLElement) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = PCFSoftShadowMap;
-  return renderer
+  return renderer;
 }
 
 function createLoadingManager() {
@@ -59,30 +54,30 @@ function createLoadingManager() {
   loadingManager.onError = () => {
     console.log("❌ error while loading");
   };
-  return loadingManager
+  return loadingManager;
 }
 
-function createCamera(canvas: HTMLElement){
+function createCamera(canvas: HTMLElement) {
   camera = new PerspectiveCamera(
     50,
     canvas.clientWidth / canvas.clientHeight,
     0.1,
-    100
+    100,
   );
   camera.position.set(2, 2, 5);
-  return camera
+  return camera;
 }
 
-function createOrbitControls(camera: PerspectiveCamera, canvas: HTMLElement){
+function createOrbitControls(camera: PerspectiveCamera, canvas: HTMLElement) {
   cameraControls = new OrbitControls(camera, canvas);
   cameraControls.target = scene.children[0].position;
   cameraControls.enableDamping = true;
   cameraControls.autoRotate = false;
   cameraControls.update();
-  return cameraControls
+  return cameraControls;
 }
 
-function enableFullscreen(){
+function enableFullscreen() {
   window.addEventListener("dblclick", (event) => {
     if (event.target === canvas) {
       toggleFullScreen(canvas);
@@ -90,14 +85,14 @@ function enableFullscreen(){
   });
 }
 
-function enableStats(){
+function enableStats() {
   clock = new Clock();
   stats = new Stats();
   document.body.appendChild(stats.dom);
-  return {clock, stats }
+  return { clock, stats };
 }
 
-function createLights(scene: Scene){
+function createLights(scene: Scene) {
   const lights = {
     pointLight: new PointLight(0xff0000, 300),
     ambientLight: new AmbientLight(0xff0000, 0.5),
@@ -105,7 +100,7 @@ function createLights(scene: Scene){
   lights.pointLight.position.set(2, 3, 4);
   lights.ambientLight.position.set(2, 3, 4);
   debugger;
-  console.log(lights)
+  console.log(lights);
   scene.add(lights.pointLight);
 }
 
@@ -117,7 +112,6 @@ function createLights(scene: Scene){
 //   const pointLightHelper = new PointLightHelper(lights.pointLight, undefined, "orange");
 //   pointLightHelper.visible = false;
 //   scene.add(pointLightHelper);
-
 
 //   const gui = new GUI({ title: "🐞 Debug GUI", width: 300 });
 
@@ -159,7 +153,6 @@ function createLights(scene: Scene){
 //   helpersFolder.add(axesHelper, 'visible').name('axes')
 //   helpersFolder.add(pointLightHelper, 'visible').name('pointLight')
 
-
 //   gui.onFinishChange(() => {
 //     const guiState = gui.save();
 //     localStorage.setItem("guiState", JSON.stringify(guiState));
@@ -167,7 +160,6 @@ function createLights(scene: Scene){
 
 //   const guiState = localStorage.getItem("guiState");
 //   if (guiState) gui.load(JSON.parse(guiState));
-
 
 //   const resetGui = () => {
 //     localStorage.removeItem("guiState");
@@ -182,14 +174,13 @@ function createLights(scene: Scene){
 
 // }
 
-
 function init() {
   canvas = document.querySelector(`canvas#${CANVAS_ID}`)!;
-  renderer = createRenderer(canvas)
-  loadingManager = createLoadingManager()
-  camera = createCamera(canvas)
-  enableFullscreen()
-  enableStats()
+  renderer = createRenderer(canvas);
+  loadingManager = createLoadingManager();
+  camera = createCamera(canvas);
+  enableFullscreen();
+  enableStats();
 }
 
 function animate() {
@@ -209,25 +200,27 @@ function render() {
   renderer.render(scene, camera);
 }
 
-function onSceneSelect(event: MouseEvent){
-  if(!scene){
-    init()
+function onSceneSelect(event: MouseEvent) {
+  if (!scene) {
+    init();
   }
-  const sceneIndex = parseInt((event.target as HTMLButtonElement).dataset.sceneIndex!) || 0
-  const { scene: newScene} = scenes[sceneIndex]()
-  scene = newScene
-  if(scene){
-    createOrbitControls(camera, canvas)
-    createLights(scene)
-    animate()
+  const sceneIndex =
+    parseInt((event.target as HTMLButtonElement).dataset.sceneIndex!) || 0;
+  const { scene: newScene } = scenes[sceneIndex]();
+  scene = newScene;
+  if (scene) {
+    createOrbitControls(camera, canvas);
+    createLights(scene);
+    animate();
   }
 
-
-  return scene
+  return scene;
 }
 
-function setupButtonListeners(){
-  document.querySelectorAll("button").forEach(button => button.onclick = onSceneSelect);
+function setupButtonListeners() {
+  document
+    .querySelectorAll("button")
+    .forEach((button) => (button.onclick = onSceneSelect));
 }
 
-setupButtonListeners()
+setupButtonListeners();
