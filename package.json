@@ -6,15 +6,24 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier --write",
+    "type-check": "tsc --noEmit",
+    "staged": "npm run type-check && npm run format"
   },
   "devDependencies": {
     "@types/three": "^0.155.0",
+    "lint-staged": "^15.2.2",
+    "prettier": "^3.2.5",
     "typescript": "^5.2.2",
     "vite": "^4.4.9"
   },
   "dependencies": {
     "lil-gui": "^0.18.2",
     "three": "^0.157.0"
+  },
+  "lint-staged": {
+    "*.{ts}": "npm run staged",
+    "*.{js,json}": "npm run format"
   }
 }
