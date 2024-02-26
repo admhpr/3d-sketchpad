@@ -1,7 +1,7 @@
 import {
   AmbientLight,
   AxesHelper,
-  BoxGeometry,
+
   GridHelper,
   Mesh,
   MeshLambertMaterial,
@@ -41,15 +41,15 @@ export function createScene() {
     
     
     const sideLength = 1
-    const cubeGeometry = new SphereGeometry(sideLength)
-    const cubeMaterial = new MeshStandardMaterial({
+    const sphereGeometry = new SphereGeometry(sideLength)
+    const sphereMaterial = new MeshStandardMaterial({
       color: 'blue',
       metalness: 0.5,
       roughness: 0.7,
     })
-    const cube = new Mesh(cubeGeometry, cubeMaterial)
-    cube.castShadow = true
-    cube.position.y = 0.5
+    const sphere = new Mesh(sphereGeometry, sphereMaterial)
+    sphere.castShadow = true
+    sphere.position.y = 0.5
 
     const planeGeometry = new PlaneGeometry(3, 3)
     const planeMaterial = new MeshLambertMaterial({
@@ -64,7 +64,7 @@ export function createScene() {
     plane.rotateX(Math.PI / 2)
     plane.receiveShadow = true
 
-    scene.add(cube)
+    scene.add(sphere)
     scene.add(plane)
 
 
@@ -82,7 +82,7 @@ export function createScene() {
     gridHelper.position.y = -0.01
     scene.add(gridHelper)
 
-    return { scene, lights: {ambientLight, pointLight}, subjects: [cube]};
+    return { scene, lights: {ambientLight, pointLight}, subjects: [sphere]};
   
 }
 

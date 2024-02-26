@@ -26,7 +26,7 @@ const CANVAS_ID = "scene";
 let canvas: HTMLElement;
 let renderer: WebGLRenderer;
 let loadingManager: LoadingManager;
-let cube: Mesh;
+let subject: Mesh;
 let camera: PerspectiveCamera;
 let cameraControls: OrbitControls;
 let dragControls: DragControls;
@@ -38,8 +38,8 @@ let stats: Stats;
 const selectedSceneIndex = 0;
 const scenes = [createScene1, createScene2];
 
-let { scene, subjects, lights } = scenes[selectedSceneIndex + 1]();
-cube = subjects[0]
+let { scene, subjects, lights } = scenes[selectedSceneIndex]();
+subject = subjects[0]
 
 init();
 animate();
@@ -91,7 +91,7 @@ function createOrbitControls(camera: PerspectiveCamera, canvas: HTMLElement){
 }
 
 function createDragControls(camera: PerspectiveCamera, renderer: WebGLRenderer){
-  const dragControls = new DragControls([cube], camera, renderer.domElement);
+  const dragControls = new DragControls([subject], camera, renderer.domElement);
   dragControls.addEventListener("hoveron", (event) => {
     event.object.material.emissive.set("orange");
   });
@@ -143,28 +143,28 @@ function createDevGui(){
 
   const gui = new GUI({ title: "🐞 Debug GUI", width: 300 });
 
-  const cubeOneFolder = gui.addFolder("Cube one");
+  const subjectOneFolder = gui.addFolder("Subject one");
 
-  cubeOneFolder.add(cube.position, "x").min(-5).max(5).step(0.5).name("pos x");
-  cubeOneFolder.add(cube.position, "y").min(-5).max(5).step(0.5).name("pos y");
-  cubeOneFolder.add(cube.position, "z").min(-5).max(5).step(0.5).name("pos z");
+  subjectOneFolder.add(subject.position, "x").min(-5).max(5).step(0.5).name("pos x");
+  subjectOneFolder.add(subject.position, "y").min(-5).max(5).step(0.5).name("pos y");
+  subjectOneFolder.add(subject.position, "z").min(-5).max(5).step(0.5).name("pos z");
 
-  cubeOneFolder.add(cube.material, "wireframe");
-  cubeOneFolder.addColor(cube.material, "color");
-  cubeOneFolder.add(cube.material, "metalness", 0, 1, 0.1);
-  cubeOneFolder.add(cube.material, "roughness", 0, 1, 0.1);
+  subjectOneFolder.add(subject.material, "wireframe");
+  subjectOneFolder.addColor(subject.material, "color");
+  subjectOneFolder.add(subject.material, "metalness", 0, 1, 0.1);
+  subjectOneFolder.add(subject.material, "roughness", 0, 1, 0.1);
 
-  cubeOneFolder
-    .add(cube.rotation, "x", -Math.PI * 2, Math.PI * 2, Math.PI / 4)
+  subjectOneFolder
+    .add(subject.rotation, "x", -Math.PI * 2, Math.PI * 2, Math.PI / 4)
     .name("rotate x");
-  cubeOneFolder
-    .add(cube.rotation, "y", -Math.PI * 2, Math.PI * 2, Math.PI / 4)
+  subjectOneFolder
+    .add(subject.rotation, "y", -Math.PI * 2, Math.PI * 2, Math.PI / 4)
     .name("rotate y");
-  cubeOneFolder
-    .add(cube.rotation, "z", -Math.PI * 2, Math.PI * 2, Math.PI / 4)
+  subjectOneFolder
+    .add(subject.rotation, "z", -Math.PI * 2, Math.PI * 2, Math.PI / 4)
     .name("rotate z");
 
-  cubeOneFolder.add(animation, "enabled").name("animated");
+  subjectOneFolder.add(animation, "enabled").name("animated");
 
   const controlsFolder = gui.addFolder("Controls");
   controlsFolder.add(dragControls, "enabled").name("drag controls");
@@ -235,6 +235,7 @@ function render() {
 function onSceneSelect(event: MouseEvent){
   const sceneIndex = parseInt((event.target as HTMLButtonElement).dataset.sceneIndex!)
   const { scene: newScene, subjects: newSubjects, lights: newLights } = scenes[sceneIndex]()
+  debugger;
   scene = newScene
   subjects = newSubjects
   lights = newLights
