@@ -1,12 +1,10 @@
 import {
-  AmbientLight,
   BoxGeometry,
   GridHelper,
   Mesh,
   MeshLambertMaterial,
   MeshStandardMaterial,
   PlaneGeometry,
-  PointLight,
   Scene,
 } from "three";
 
@@ -15,17 +13,6 @@ import "../style.css";
 
 export function createScene() {
   const scene = new Scene();
-  const ambientLight = new AmbientLight("white", 0.4);
-  const pointLight = new PointLight("#ffdca8", 50, 100);
-  pointLight.position.set(-2, 3, 3);
-  pointLight.castShadow = true;
-  pointLight.shadow.radius = 4;
-  pointLight.shadow.camera.near = 0.5;
-  pointLight.shadow.camera.far = 4000;
-  pointLight.shadow.mapSize.width = 2048;
-  pointLight.shadow.mapSize.height = 2048;
-  scene.add(ambientLight);
-  scene.add(pointLight);
 
   const sideLength = 1;
   const cubeGeometry = new BoxGeometry(sideLength, sideLength, sideLength);
@@ -57,5 +44,5 @@ export function createScene() {
   const gridHelper = new GridHelper(20, 20, "teal", "darkgray");
   gridHelper.position.y = -0.01;
   scene.add(gridHelper);
-  return { scene, lights: {ambientLight, pointLight}, subjects: [cube]};
+  return { scene };
 }
