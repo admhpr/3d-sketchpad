@@ -28,8 +28,9 @@ let cameraControls: OrbitControls;
 let clock: Clock;
 let stats: Stats;
 
+export type SceneWithAction = Scene & { action?: () => void };
 const scenes = [createScene1, createScene2];
-let scene: Scene;
+let scene: SceneWithAction;
 
 function createRenderer(canvas: HTMLElement) {
   renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true });
@@ -99,8 +100,6 @@ function createLights(scene: Scene) {
   };
   lights.pointLight.position.set(2, 3, 4);
   lights.ambientLight.position.set(2, 3, 4);
-  debugger;
-  console.log(lights);
   scene.add(lights.pointLight);
 }
 
@@ -187,7 +186,9 @@ function animate() {
   requestAnimationFrame(animate);
   render();
   stats.update();
-
+  if (scene.action) {
+    scene.action();
+  }
   if (resizeRendererToDisplaySize(renderer)) {
     const canvas = renderer.domElement;
     camera.aspect = canvas.clientWidth / canvas.clientHeight;

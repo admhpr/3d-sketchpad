@@ -9,9 +9,10 @@ import {
 } from "three";
 
 import "../style.css";
+import { SceneWithAction } from "..";
 
 export function createScene() {
-  const scene = new Scene();
+  const scene: SceneWithAction = new Scene();
 
   const sideLength = 1;
   const cubeGeometry = new BoxGeometry(sideLength, sideLength, sideLength);
@@ -43,5 +44,9 @@ export function createScene() {
   const gridHelper = new GridHelper(20, 20, "teal", "darkgray");
   gridHelper.position.y = -0.01;
   scene.add(gridHelper);
+  scene.action = () => {
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
+  };
   return { scene };
 }
